@@ -7,6 +7,7 @@ import (
 	"github.com/unixpickle/essentials"
 	"github.com/unixpickle/postag"
 	"github.com/unixpickle/wordembed"
+	_ "github.com/unixpickle/wordembed/glove"
 )
 
 func main() {
@@ -27,9 +28,6 @@ func main() {
 
 	tokens := (&wordembed.Tokenizer{}).Tokenize(phrase)
 	tags := model.Tag(tokens)
-	if tags == nil {
-		essentials.Die("no explanation for phrase")
-	}
 	for i, token := range tokens {
 		fmt.Println(token, tags[i])
 	}
