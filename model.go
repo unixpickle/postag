@@ -10,7 +10,7 @@ import (
 	"github.com/unixpickle/essentials"
 	"github.com/unixpickle/hmm"
 	"github.com/unixpickle/serializer"
-	"github.com/unixpickle/wordembed/glove"
+	"github.com/unixpickle/wordembed"
 )
 
 func init() {
@@ -19,7 +19,7 @@ func init() {
 
 // A Model is a complete POS tagger.
 type Model struct {
-	Embedding *glove.Embedding
+	Embedding wordembed.Embedding
 	HMM       *hmm.HMM
 }
 
@@ -39,6 +39,20 @@ func LoadModel(path string) (model *Model, err error) {
 		return nil, err
 	}
 	return model, nil
+}
+
+// Tag produces tags for the tokenized phrase.
+func (m *Model) Tag(tokens []string) []string {
+	obsSeq := make([]hmm.Obs, len(tokens))
+	for i, tok := range tokens {
+		obsSeq[i] = embeddingVec(m.Embedding, tok)
+	}
+	hidden := hmm.MostLikely(m.HMM, obsSeq)
+	var res []string
+	for _, state := range hidden {
+		res = append(res, state.(string))
+	}
+	return res
 }
 
 // Save saves the model to a file.
@@ -80,8 +94,8 @@ func (g *Gaussian) LogProb(vec []float64) float64 {
 	var res float64
 	for i, comp := range vec {
 		variance := g.Stddev[i] * g.Stddev[i]
-		res -= math.Log(1 / math.Sqrt(2*math.Pi*variance))
-		res -= (comp - g.Mean[i]) / (2 * variance)
+		res += math.Log(1 / math.Sqrt(2*math.Pi*variance))
+		res -= math.Pow(comp-g.Mean[i], 2) / (2 * variance)
 	}
 	return res
 }
