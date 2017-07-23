@@ -7,6 +7,7 @@ import (
 	"github.com/unixpickle/essentials"
 	"github.com/unixpickle/postag"
 	"github.com/unixpickle/wordembed"
+	_ "github.com/unixpickle/wordembed/glove"
 )
 
 func main() {
@@ -44,7 +45,7 @@ func main() {
 			workedSequences++
 		}
 		for i, a := range actual {
-			if expected[i] == a {
+			if string(expected[i]) == a {
 				correctTokens++
 			}
 		}

@@ -28,6 +28,9 @@ func main() {
 
 	tokens := (&wordembed.Tokenizer{}).Tokenize(phrase)
 	tags := model.Tag(tokens)
+	if len(tags) == 0 {
+		essentials.Die("impossible token sequence")
+	}
 	for i, token := range tokens {
 		fmt.Println(token, tags[i])
 	}

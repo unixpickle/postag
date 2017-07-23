@@ -8,13 +8,14 @@ import (
 	"strings"
 
 	"github.com/unixpickle/essentials"
+	"github.com/unixpickle/serializer"
 	"github.com/unixpickle/wordembed"
 )
 
 // Sample is a sentence from a POS tagging dataset.
 type Sample struct {
 	Tokens []string
-	Tags   []string
+	Tags   []serializer.String
 }
 
 // ReadSamples reads the data from a POS dataset.
@@ -55,7 +56,7 @@ func ReadSamples(path string, t *wordembed.Tokenizer) (data []Sample, err error)
 		}
 		for _, token := range tokens {
 			curSample.Tokens = append(curSample.Tokens, token)
-			curSample.Tags = append(curSample.Tags, fields[1])
+			curSample.Tags = append(curSample.Tags, serializer.String(fields[1]))
 		}
 	}
 
