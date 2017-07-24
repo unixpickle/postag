@@ -156,13 +156,12 @@ func DeserializeGaussianEmitter(d []byte) (g GaussianEmitter, err error) {
 	return g, nil
 }
 
-// Sample samples a []float64 from the distribution.
+// Sample samples a vector from the distribution.
 func (g GaussianEmitter) Sample(gen *rand.Rand, state hmm.State) hmm.Obs {
 	return g[state].Sample(gen)
 }
 
-// LogProbs computes conditional densities for a []float64
-// observation.
+// LogProbs computes conditional densities for a vector.
 func (g GaussianEmitter) LogProbs(obs hmm.Obs, states ...hmm.State) []float64 {
 	var res []float64
 	for _, state := range states {
